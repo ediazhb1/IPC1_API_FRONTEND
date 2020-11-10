@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iUSAC STORE</title>
+    <link rel="shortcut icon" href="../images/logoicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../css/style2.css">
+</head>
+<body>
+    
+    <section>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>	
+    	   <div class="box2">
+            <div id="logo">
+            <a href="../../marble/index.html">  
+            <img src="../images/logo1.png" width="175" height="135">
+            </a>
+            </div>
+            <div class="form">
+                <h2>Crear una Cuenta</h2>
+                <form action="">
+                    <div class="inputBx">
+                        <input id="nombre"type="text" placeholder="Nombre">
+                    </div>
+                     <div class="inputBx">
+                        <input id="apellido" type="text" placeholder="Apellido">
+                    </div>
+                    <div class="inputBx">
+                        <input id="user" type="text" placeholder="Usuario">
+                    </div>
+                    <div class="inputBx">
+                        <input id="pass" type="password" placeholder="Contraseña">
+                    </div>
+                    <div class="inputBx">
+                        <input id="copass" type="password" placeholder="Confirmar Contraseña">
+                    </div>
+                    <center>
+                    <button onclick="Register()" type="button" class="button2">Registrase</button>                               
+                    </center>
+                    <center>                  
+                    <a href="../index.html" class="button1">¿Ya tenias una cuenta? Inicia Sesión! </a>
+                    </center>
+                    </form>
+            </div>
+        </div>
+    </section>       	
+        <script>
+            function Register(){
+                var name = document.querySelector('#nombre').value
+                var last = document.querySelector('#apellido').value
+                var username = document.querySelector('#user').value
+                var password = document.querySelector('#pass').value
+                var confirm = document.querySelector('#copass').value
+                var rol = "Cliente"
+
+
+                var objeto = {
+                'nombre': name,
+                'apellido': last,
+                'usuario': username,
+                'password': password,
+                'confirm': confirm,
+                'rol':rol
+
+                }
+                console.log(objeto)
+                fetch('http://localhost:5001/NewPersonas', {
+                    method: 'POST',
+                    body: JSON.stringify(objeto),
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                    .catch(err => {
+                    console.error('Error:', err)
+                    Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `No se ha podido registrar la cuenta :c <br>` +
+                                    err,
+                                    confirmButtonText: "OK"
+                                    });
+                        })
+                    .then(response =>{
+                        console.log(response);
+                    console.log(response.message)
+                    if(response.message == "Failed1"){
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `No se ha podido registrar, (Verifique contraseña y confirmar contraseña).`,
+                                    confirmButtonText: "OK"
+                        });
+                    }else if(response.message == "Failed"){
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `No se ha podido registrar, (El usuario ya existe, intente con otro usuario).`,
+                                    confirmButtonText: "OK"
+                        });
+                    }else if(response.message == "Failed2"){
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `Problema con los campos, (Todos los campos son obligatorios).`,
+                                    confirmButtonText: "OK"
+                        });
+                    }else{
+                    Swal.fire({
+                    icon: 'success',
+                    title: `Felicidades!`,
+                    text: `Te has registrado ${name}. Inicia sesión`,
+                    confirmButtonText: "OK"
+                    }).then(function() {
+                    window.location = "../index.html";
+                    });
+
+                    }
+                    }) 
+            }
+        </script>    
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iUSAC STORE (Olvidó Contraseña)</title>
+    <link rel="shortcut icon" href="../images/logoicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../css/style3.css">
+</head>
+<body>   
+	 <section>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>	       
+        <div class="box">
+            <div id="logo">
+                <img src="../images/logo1.png" width="175" height="135">
+            </div>
+            <div class="form">
+                <h2>Recuperar Contraseña</h2>
+                <form action="">
+                    <div class="inputBx">
+                        <input id="user" type="text" placeholder="Nombre de usuario">
+                    </div>
+                    <center>
+                    <button onclick="Recover()" type="button" class="button1">Recuperar Contraseña</button>                                                 
+                    </center>
+                    <center>                  
+                    <a href="../index.html" class="button1">Regresar al Inicio de Sesión </a>
+                    </center>
+             </section>
+
+             <script>
+                 function Recover(){
+
+                    var username = document.querySelector('#user').value
+
+                    fetch(`http://localhost:5001/DPersona/${username}`, {
+                        method: 'GET',
+                    }).then(res => res.json())
+                    .catch(err => {
+                    console.error('Error:', err)
+                    Swal.fire({
+                        icon: 'error',
+                        title: `Error!`,
+                        text: `No se encontró el usuario: ${username}`,
+                        confirmButtonText: "OK"
+                        });
+                          })
+                    .then(json =>{
+                        Swal.fire({
+                        icon: 'success',
+                        title: `Exito!`,
+                        html: `Se ha encontrado la información <br>` +
+                        `usuario: ${username} <br>` +
+                        `contraseña: ${json.password}`,
+                        confirmButtonText: "Iniciar Sesión!",
+                        allowOutsideClick:true,
+                        allowEscapeKey:true,
+                        allowEnterKey: true
+                        }).then(function() {
+                        window.location = "../index.html";
+                        });
+                    
+                    })
+                 }
+             </script>
+</body>
+</html>

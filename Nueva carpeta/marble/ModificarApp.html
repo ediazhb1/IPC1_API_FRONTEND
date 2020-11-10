@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iUSAC STORE (Modificar APP)</title>
+    <link rel="stylesheet" type="text/css" href="css/styleMP.css">
+</head>
+<body onload="loadAnteriores()" id ="main">    
+    <section>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+           <div class="box2">
+            <div id="logo">
+            <img src="images/logo1.png" width="175" height="135">
+            </div>
+            <div class="form">
+                <h2>Modificar Aplicacion</h2>
+                <form action="">
+                    <div class="inputBx">
+                        <input id="ids"type="text" placeholder="ID">
+                    </div>
+                     <div class="inputBx">
+                        <input id="titulo" type="text" placeholder="Titulo">
+                    </div>
+                    <div class="inputBx">
+                        <input id="url" type="text" placeholder="Url">
+                    </div>
+                    <div class="inputBx">
+                        <input id="categoria" type="text" placeholder="Categoria">
+                    </div>
+                    <div class="inputBx">
+                        <input id="descargas" type="number" placeholder="Descargas">
+                    </div>
+                      <div class="inputBx">
+                        <input id="descripcion" type="text" placeholder="Descripcion">
+                    </div>
+                      <div class="inputBx">
+                        <input id="precio" type="number" placeholder="Precio">
+                    </div>
+                      <div class="inputBx">
+                        <input id="likes" type="number" placeholder="Likes">
+                    </div>
+                    <center>
+                    <button onclick="Modificar()" type="button" class="button2">Modificar Aplicacion</button>                               
+                    </center>
+                    <center>                  
+                    <button onclick="Return()" type="button" class="button3">Regresar</button>                               
+                    </center>
+                    </form>
+            </div>
+        </div>
+    </section>          
+        <script>
+
+function Return(){
+                location.href="Administrador.html"
+
+            }
+
+            function loadAnteriores(){
+                var iniciado = sessionStorage.buscar
+
+                fetch(`http://localhost:5001/DataApp/${iniciado}`, {
+                        method: 'GET',
+                    }).then(res => res.json())
+                    .catch(err => {
+                    console.error('Error:', err)
+                    Swal.fire({
+                        icon: 'error',
+                        title: `Error!`,
+                        text: `Contacte a soporte`,
+                        confirmButtonText: "OK"
+                        });
+                          })
+                    .then(json =>{                                     
+                        document.querySelector('#ids').value = json.ids
+                        document.querySelector('#titulo').value = json.titulo
+                        document.querySelector('#url').value = json.url
+                        document.querySelector('#categoria').value = json.categoria
+                        document.querySelector('#descargas').value = json.descargas
+                        document.querySelector('#descripcion').value = json.descripcion
+                        document.querySelector('#precio').value = json.precio
+                        document.querySelector('#likes').value = json.likes
+
+                    })
+
+            }
+
+            function Modificar(){
+                var ids = document.querySelector('#ids').value
+                var titulo = document.querySelector('#titulo').value
+                var url = document.querySelector('#url').value
+                var categoria = document.querySelector('#categoria').value
+                var descargas = document.querySelector('#descargas').value
+                var descripcion = document.querySelector('#descripcion').value
+                var precio = document.querySelector('#precio').value
+                var likes = document.querySelector('#likes').value
+
+                var iniciado = sessionStorage.buscar
+
+                var objeto = {
+                'ids': ids,
+                'titulo': titulo,
+                'url': url,
+                'categoria': categoria,
+                'descargas': descargas,
+                'descripcion': descripcion,
+                'precio': precio,
+                'likes': likes
+                }
+
+
+                fetch(`http://localhost:5001/UpdateApp/${iniciado}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(objeto),
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                    .catch(err => {
+                    console.error('Error:', err)
+                    Swal.fire({
+                            icon: 'error',
+                            title: `Error!`,
+                            html: `No se ha podido registrar la cuenta :c <br>` +
+                            err,
+                            confirmButtonText: "OK"
+                             });
+                        })
+                    .then(response =>{
+                    console.log(response);
+                    console.log(response.message)
+                   if(response.message == "Failed2"){
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `Problema con los campos, (Todos los campos son obligatorios).`,
+                                    confirmButtonText: "OK"
+                        });
+                    }else if(response.message == "Failed"){
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `Problema con los campos, (El ID ya esta registrado, utilice otro).`,
+                                    confirmButtonText: "OK"
+                        });
+                    }
+                    else{
+                        Swal.fire({
+                        icon: 'success',
+                        title: `Felicidades!`,
+                        text: `Se Modifico la app ${titulo}.`,
+                        confirmButtonText: "OK"
+                        }).then(function() {
+                        window.location = "Administrador.html";
+                        });
+
+                    }
+                    }) 
+
+
+
+
+
+
+                }
+                       
+        </script>    
+</body>
+</html>
