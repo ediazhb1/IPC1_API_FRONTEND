@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iUSAC STORE</title>
+    <link rel="shortcut icon" href="images/logoicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="css/style22.css">
+</head>
+<body>
+    
+    <section>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>	
+    	   <div class="box2">
+            <div id="logo">
+            <img src="images/logo1.png" width="175" height="135">
+            </a>
+            </div>
+            <div class="form">
+                <h2>Subir Nueva Aplicación</h2>
+                <form action="">
+                    <div class="inputBx">
+                        <input id="titulo"type="text" placeholder="Titulo">
+                    </div>
+                     <div class="inputBx">
+                        <input id="url" type="text" placeholder="URL">
+                    </div>
+                    <div class="inputBx">
+                        <input id="categoria" type="text" placeholder="Categoria">
+                    </div>
+                    <div class="inputBx">
+                        <input id="descargas" type="number" placeholder="Descargas (Escriba 0 si es nueva)">
+                    </div>
+                    <div class="inputBx">
+                        <input id="descripcion" type="text" placeholder="Descripcion">
+                    </div>
+                    <div class="inputBx">
+                        <input id="precio" type="text" placeholder="Precio">
+                    </div>
+                    <div class="inputBx">
+                        <input id="likes" type="text" placeholder="Likes (Escriba 0 si es nueva)">
+                    </div>
+                    <center>
+                    <button onclick="Register()" type="button" class="button2">Enviar Solicitud</button>                               
+                    </center>
+                    <center>
+                        <button onclick="Regresar()" type="button" class="button2">Regresar</button>                               
+                    </center>
+                    
+                    </form>
+            </div>
+        </div>
+    </section>       	
+        <script>
+            function Register(){
+
+                var Title = document.querySelector('#titulo').value
+                var Url = document.querySelector('#url').value
+                var Category = document.querySelector('#categoria').value
+                var Download = document.querySelector('#descargas').value
+                var Description = document.querySelector('#descripcion').value
+                var Price = document.querySelector('#precio').value
+                var Like = document.querySelector('#likes').value
+
+
+                var objeto = {
+                'title': Title,
+                'url': Url,
+                'category': Category,
+                'download': Download,
+                'description': Description,
+                'price':Price,
+                'like': Like
+
+                }
+                console.log(objeto)
+                fetch('http://localhost:5001/NewAppss', {
+                    method: 'POST',
+                    body: JSON.stringify(objeto),
+                    headers:{
+                    'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                .catch(err => {
+                    console.error('Error:', err)
+                    Swal.fire({
+                                    icon: 'error',
+                                    title: `Error!`,
+                                    html: `No se ha podido registrar la app` +
+                                    err,
+                                    confirmButtonText: "OK"
+                                    });
+                        })
+                .then(response =>{
+                    if(response.message == "Success"){
+                        Swal.fire({
+                                    icon: 'Success',
+                                    title: `Exito!`,
+                                    html: `Se mando a revisión la aplicación.`,
+                                    confirmButtonText: "OK"
+                        }).then(function() {
+                        window.location = "Clientes.html";
+                    });
+                    }
+                    }) 
+            }
+
+            function Regresar(){
+            	location.href="Clientes.html"
+            }
+
+        </script>    
+</body>
+</html>
